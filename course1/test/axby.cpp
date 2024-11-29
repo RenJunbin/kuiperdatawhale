@@ -6,6 +6,7 @@
 #include <gtest/gtest.h>
 void Axby(const arma::fmat &x, const arma::fmat &w, const arma::fmat &b,
           arma::fmat &y) {
+        y = w * x + b;
   // 把代码写这里 完成y = w * x + b的运算
 }
 
@@ -33,6 +34,7 @@ TEST(test_arma, Axby) {
 }
 
 void EPowerMinus(const arma::fmat &x, arma::fmat &y) {
+  y = arma::exp(-x);
   // 把代码写这里 完成y = e^{-x}的运算
 }
 
@@ -52,6 +54,7 @@ TEST(test_arma, e_power_minus) {
 }
 
 void Axpy(const arma::fmat &x, arma::fmat &Y, float a, float y) {
+    Y = a * x + y;
   // 编写Y = a * x + y
 }
 
