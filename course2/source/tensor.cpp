@@ -165,6 +165,32 @@ void Tensor<float>::Padding(const std::vector<uint32_t>& pads,
   uint32_t pad_cols1 = pads.at(2);  // left
   uint32_t pad_cols2 = pads.at(3);  // right
 
+  uint32_t rows = this->rows();
+  uint32_t cols = this->cols();
+
+  if (this->raw_shapes_.size() == 3) {
+      uint32_t channels = this->channels();
+      this->raw_shapes_[1] = rows + pad_rows1 + pad_rows2;
+      this->raw_shapes_[2] = cols + pad_cols1 + pad_cols2;
+  } else {
+      this->raw_shapes_[0] = rows + pad_rows1 + pad_rows2;
+      this->raw_shapes_[1] = cols + pad_cols1 + pad_cols2;
+  }
+  arma::fcube new_data_ = arma::fcube(rows+pad_rows1+pad_rows2, \
+      cols + pad_cols1 + pad_cols2, this->raw_shapes_[0]);
+  
+  // for (uint32_t r_idx = 0; r_idx < rows+pad_rows1+pad_rows2; r_idx++) {
+  //   for (uint32_t c_idx = 0; c_idx < cols + pad_cols1 + pad_cols2; c_idx++) {
+  //       if (r_idx < pad_rows1) {
+  //         // ...
+  //       } else if (pad_rows1 <r_idx && r_idx < rows + pad_rows1) {
+  //         // ...
+  //       } else {  // rows + pad_rows1 < r_idx && r_idx < rows + pad_rows1 + pad_rows2
+  //         // ...
+  //       }
+  //     }
+  //   }
+  // }
   // 请补充代码
 }
 
@@ -203,7 +229,14 @@ void Tensor<float>::Show() {
 
 void Tensor<float>::Flatten(bool row_major) {
   CHECK(!this->data_.empty());
-  // 请补充代码
+  const uint32_t row = this->rows();
+  const uint32_t col = this->cols();
+  const uint32_t channels = this->channels();
+  const uint32_t planes = row * col * channels;
+
+  this->data_.reshape(1, planes, 1);
+  this->raw_shapes_ = {planes};
+  // 请补充代码 works!
 }
 
 void Tensor<float>::Rand() {
