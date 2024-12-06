@@ -176,6 +176,7 @@ void Tensor<float>::Padding(const std::vector<uint32_t>& pads,
       this->raw_shapes_[0] = rows + pad_rows1 + pad_rows2;
       this->raw_shapes_[1] = cols + pad_cols1 + pad_cols2;
   }
+
   arma::fcube new_data_ = arma::fcube(rows+pad_rows1+pad_rows2, \
       cols + pad_cols1 + pad_cols2, this->raw_shapes_[0]);
   
@@ -183,15 +184,24 @@ void Tensor<float>::Padding(const std::vector<uint32_t>& pads,
   //   for (uint32_t c_idx = 0; c_idx < cols + pad_cols1 + pad_cols2; c_idx++) {
   //       if (r_idx < pad_rows1) {
   //         // ...
+  //         for (uint32_t ch_idx = 0; ch_idx < this->channels(); ch_idx++) {
+  //           new_data_.at(r_idx, c_idx, ch_idx) = 0;
+  //         }
   //       } else if (pad_rows1 <r_idx && r_idx < rows + pad_rows1) {
+  //         for (uint32_t ch_idx = 0; ch_idx < this->channels(); ch_idx++) {
+  //           new_data_.at(r_idx, c_idx, ch_idx) = this->data_.at(r_idx-pad_rows1, c_idx-pad_cols1, ch_idx);
   //         // ...
+  //         }
   //       } else {  // rows + pad_rows1 < r_idx && r_idx < rows + pad_rows1 + pad_rows2
+  //         for (uint32_t ch_idx = 0; ch_idx < this->channels(); ch_idx++) {
+  //           new_data_.at(r_idx, c_idx, ch_idx) = 0;
   //         // ...
+  //         }
   //       }
   //     }
   //   }
-  // }
   // 请补充代码
+  this->data_ = new_data_;
 }
 
 void Tensor<float>::Fill(float value) {
